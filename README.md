@@ -24,6 +24,30 @@ FitBuddy is an AI-powered fitness assistant that creates personalized 7-day work
 - CSS
 - JavaScript
 
+## Gemini Model Selection Strategy
+
+FitBuddy supports selecting the Gemini model through the `GEMINI_MODEL` environment variable so the app can balance latency, reasoning quality, and cost for different tasks.
+
+Recommended defaults:
+
+- `gemini-1.5-flash`: best default for FitBuddy; low latency and strong structured output for plan generation and nutrition recommendations.
+- `gemini-2.0-flash`: strong option when the app needs very quick responses for dashboard interactions and iterative plan refinements.
+- `gemini-2.5-flash`: useful for more nuanced coaching logic when plan updates need deeper reasoning.
+- `gemini-2.5-pro`: best for highly complex coaching prompts, but slower and more expensive than the flash variants.
+
+Core selection guidance:
+
+- Workout plan generation: prefer `gemini-1.5-flash` or `gemini-2.0-flash`
+- Feedback-based plan refinement: use `gemini-2.0-flash` or `gemini-2.5-flash`
+- Nutrition/recovery guidance: `gemini-1.5-flash` is typically sufficient and cost-efficient
+
+Example:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-2.0-flash
+```
+
 ## Installation
 
 ```bash
