@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitness Dashboard | FitBuddy</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <div class="brand">FitBuddy</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/profile">Profile</a>
+                <a href="/history/{{ user.id }}">Plan History</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container dashboard">
+            <section class="hero-row card">
+                <div>
+                    <p class="eyebrow">Welcome</p>
+                    <h1>Welcome, {{ user.name }}! 👋</h1>
+                    <p>Goal: <strong>{{ user.fitness_goal }}</strong> | Intensity: <strong>{{ user.workout_intensity }}</strong></p>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="main-column">
+                    <div class="card plan-header">
+                        <h2>7-Day Personalized Plan</h2>
+                    </div>
+                    {% if plan and plan.plan_data %}
+                        {% for day in plan.plan_data.days %}
+                            <article class="workout-card card">
+                                <div class="day-header">
+                                    <h3>{{ day.day }}</h3>
+                                    <span>{{ day.focus }}</span>
+                                </div>
+                                <ul>
+                                    {% for exercise in day.exercises %}
+                                        <li>{{ exercise.name }} – {{ exercise.sets }} × {{ exercise.reps }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <p>Duration: {{ day.duration_minutes }} minutes</p>
+                                <p>Rest: {{ day.rest_period }}</p>
+                                <p class="muted">{{ day.explanation }}</p>
+                            </article>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card empty-state">No active plan yet.</div>
+                    {% endif %}
+                </div>
+
+                <aside class="side-column">
+                    <div class="card">
+                        <h3>Want to improve your plan?</h3>
+                        <p>Tell FitBuddy what you want to change.</p>
+                        <textarea id="feedbackInput" rows="5" placeholder="Add more cardio and reduce heavy leg exercises."></textarea>
+                        <button id="refinePlanBtn" class="btn primary">Improve My Plan</button>
+                        <div id="refineStatus" class="status-message" hidden></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Today's Nutrition & Recovery Tip</h3>
+                        <button id="tipBtn" class="btn secondary">Generate Tip</button>
+                        <div id="tipResult" class="tip-result"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Plan History</h3>
+                        {% if history %}
+                            {% for item in history %}
+                                <div class="history-item">
+                                    <strong>Version {{ item.version }}</strong>
+                                    <p>Created: {{ item.created_at.strftime('%d %b %Y') }}</p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No prior versions yet.</p>
+                        {% endif %}
+                    </div>
+                </aside>
+            </section>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        const userId = {{ user.id }};
+        window.userId = userId;
+    </script>
+</body>
+</html>

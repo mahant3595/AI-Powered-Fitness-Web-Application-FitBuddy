@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Fitness Profile | FitBuddy</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <div class="brand">FitBuddy</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/profile">Profile</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container form-wrap">
+            <section class="panel">
+                <h1>Your Fitness Profile</h1>
+                <form id="profileForm" class="profile-form">
+                    <div class="field-grid">
+                        <label>
+                            <span>Full Name</span>
+                            <input type="text" name="name" required />
+                        </label>
+                        <label>
+                            <span>Age</span>
+                            <input type="number" name="age" min="10" max="100" required />
+                        </label>
+                        <label>
+                            <span>Weight (kg)</span>
+                            <input type="number" name="weight" step="0.1" min="1" required />
+                        </label>
+                        <label>
+                            <span>Fitness Goal</span>
+                            <select name="fitness_goal" required>
+                                <option value="Weight Loss">Weight Loss</option>
+                                <option value="Muscle Gain">Muscle Gain</option>
+                                <option value="General Wellness">General Wellness</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Workout Intensity</span>
+                            <select name="workout_intensity" required>
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Experience Level</span>
+                            <select name="experience_level">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Preferred Workout Type</span>
+                            <select name="preferred_workout">
+                                <option value="Cardio">Cardio</option>
+                                <option value="Strength Training">Strength Training</option>
+                                <option value="Mixed">Mixed</option>
+                                <option value="Flexibility">Flexibility</option>
+                                <option value="No Preference">No Preference</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Available Workout Time</span>
+                            <select name="available_time">
+                                <option value="15">15 minutes</option>
+                                <option value="30" selected>30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60">60 minutes</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div id="formError" class="form-error" hidden></div>
+                    <button type="submit" class="btn primary submit-btn">Generate My Plan</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

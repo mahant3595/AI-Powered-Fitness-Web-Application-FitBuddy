@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan History | FitBuddy</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <div class="brand">FitBuddy</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/dashboard/{{ user.id }}">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container">
+            <section class="card">
+                <h1>Plan History</h1>
+                {% if history %}
+                    {% for item in history %}
+                        <div class="history-version">
+                            <h3>Version {{ item.version }}</h3>
+                            <p>Created: {{ item.created_at.strftime('%d %b %Y') }}</p>
+                            {% if item.feedback %}
+                                <p>Updated based on feedback: {{ item.feedback }}</p>
+                            {% endif %}
+                            <button class="btn secondary" onclick="window.location.href='/dashboard/{{ user.id }}'">Open latest plan</button>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No plan history available yet.</p>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+</body>
+</html>
