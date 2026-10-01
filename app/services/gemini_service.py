@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from typing import Any
 
 from dotenv import load_dotenv
@@ -11,14 +12,36 @@ try:
 except ImportError:  # pragma: no cover - compatibility for older environments
     google_genai = None
 
-try:
-    from google import generativeai as genai
-except ImportError:  # pragma: no cover - compatibility for newer environments
+if google_genai is None:
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=FutureWarning, module="google")
+        try:
+            from google import generativeai as genai
+        except ImportError:  # pragma: no cover - compatibility for newer environments
+            genai = None
+else:
     genai = None
 
 from app.models import User
 
 load_dotenv()
+
+GEMINI_MODEL_OPTIONS = {
+    "gemini-2.0-flash": "Best for fast, responsive plan generation and lower-latency user interactions.",
+    "gemini-1.5-flash": "Balanced default with strong structured output and broad compatibility.",
+    "gemini-2.5-flash": "Good for richer reasoning and more nuanced coaching feedback.",
+    "gemini-2.5-pro": "Best for deep reasoning and complex prompt chains, but slower and more expensive.",
+}
+
+
+def get_selected_gemini_model() -> str:
+    configured = (os.getenv("GEMINI_MODEL") or os.getenv("GOOGLE_GENAI_MODEL") or "gemini-1.5-flash").strip()
+    normalized = configured.lower()
+    if normalized in GEMINI_MODEL_OPTIONS:
+        return normalized
+    if normalized.startswith("gemini-"):
+        return normalized
+    return "gemini-1.5-flash"
 
 
 def _fallback_nutrition_tip(goal: str) -> str:
@@ -155,10 +178,12 @@ def _call_gemini(prompt: str):
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured.")
 
+    model_name = get_selected_gemini_model()
+
     if google_genai is not None:
         client = google_genai.Client(api_key=api_key)
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model=model_name,
             contents=prompt,
             config={"temperature": 0.4, "top_p": 0.9},
         )
@@ -174,7 +199,7 @@ def _call_gemini(prompt: str):
         raise RuntimeError("Google AI SDK is not available.")
 
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name)
     response = model.generate_content(prompt, generation_config={"temperature": 0.4, "top_p": 0.9})
     return getattr(response, "text", "") or ""
 

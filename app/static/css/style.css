@@ -98,6 +98,23 @@ h1 {
     background: var(--secondary);
     color: var(--text);
 }
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.admin-table th,
+.admin-table td {
+    border-bottom: 1px solid #edf2f1;
+    padding: 12px 10px;
+    vertical-align: middle;
+}
+.admin-table th {
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
 .feature-list {
     list-style: none;
     padding: 0;
@@ -188,6 +205,106 @@ input:focus, select:focus, textarea:focus {
 }
 .hero-row {
     margin-bottom: 24px;
+}
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0 0 24px;
+}
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 110px;
+    justify-content: center;
+}
+.stat-card strong {
+    font-size: clamp(1.8rem, 2vw, 2.4rem);
+    color: var(--primary-dark);
+}
+.stat-label {
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+}
+.insights-row {
+    margin: 0 0 24px;
+}
+.insight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+.insight-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+.btn.small {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+}
+.habit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.habit-list {
+    display: grid;
+    gap: 10px;
+}
+.habit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+}
+.habit-item input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+.habit-progress {
+    height: 10px;
+    background: #edf3f1;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 16px;
+}
+.habit-progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary), #61d3a8);
+    border-radius: inherit;
+    transition: width 0.2s ease;
+}
+.focus-summary {
+    margin: 0 0 16px;
+}
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+.focus-tag {
+    display: inline-flex;
+    align-items: center;
+    background: #ebfaf4;
+    color: var(--primary-dark);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 .dashboard-grid {
     display: grid;

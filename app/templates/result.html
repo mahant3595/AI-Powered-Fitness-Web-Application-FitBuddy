@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitBuddy Results</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <div class="brand">FitBuddy</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/profile">Profile</a>
+                <a href="/dashboard/{{ user.id }}">Dashboard</a>
+                <a href="/admin/users">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container form-wrap">
+            <section class="card hero-row">
+                <p class="eyebrow">Your plan</p>
+                <h1>{{ user.name }}'s Fitness Snapshot</h1>
+                <p>Goal: <strong>{{ user.fitness_goal }}</strong> | Intensity: <strong>{{ user.workout_intensity }}</strong></p>
+            </section>
+
+            {% if plan and plan.plan_data %}
+                <section class="card">
+                    <div class="plan-header">
+                        <h2>7-Day Personalized Plan</h2>
+                        {% if plan.version %}
+                            <p class="muted">Version {{ plan.version }}</p>
+                        {% endif %}
+                    </div>
+                    {% for day in plan.plan_data.days %}
+                        <article class="workout-card card">
+                            <div class="day-header">
+                                <h3>{{ day.day }}</h3>
+                                <span>{{ day.focus }}</span>
+                            </div>
+                            <ul>
+                                {% for exercise in day.exercises %}
+                                    <li>{{ exercise.name }} – {{ exercise.sets }} × {{ exercise.reps }}</li>
+                                {% endfor %}
+                            </ul>
+                            <p>Duration: {{ day.duration_minutes }} minutes</p>
+                            <p>Rest: {{ day.rest_period }}</p>
+                            <p class="muted">{{ day.explanation }}</p>
+                        </article>
+                    {% endfor %}
+                </section>
+            {% else %}
+                <div class="card empty-state">No plan is available yet. Create one from the profile page.</div>
+            {% endif %}
+
+            <section class="card">
+                <h3>Nutrition & Recovery Tip</h3>
+                <p>{{ tip }}</p>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

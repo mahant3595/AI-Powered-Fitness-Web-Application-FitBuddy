@@ -28,12 +28,56 @@
                 </div>
             </section>
 
+            <section class="stats-row">
+                <div class="stat-card card">
+                    <span class="stat-label">Weekly Minutes</span>
+                    <strong>{{ plan_summary.total_minutes }}</strong>
+                </div>
+                <div class="stat-card card">
+                    <span class="stat-label">Recovery Sessions</span>
+                    <strong>{{ plan_summary.recovery_days }}</strong>
+                </div>
+                <div class="stat-card card">
+                    <span class="stat-label">Focus Areas</span>
+                    <strong>{{ plan_summary.focus_areas|length }}</strong>
+                </div>
+            </section>
+
+            <section class="insights-row">
+                <div class="card insight-card">
+                    <div class="insight-header">
+                        <h3>Coach snapshot</h3>
+                        <button id="copyPlanBtn" class="btn secondary small">Copy summary</button>
+                    </div>
+                    {% if plan and plan.plan_data %}
+                        <p id="planSummaryText">
+                            This {{ user.fitness_goal|lower }} plan emphasizes {{ plan_summary.focus_areas|join(', ') if plan_summary.focus_areas else 'balanced full-body training' }} with {{ plan_summary.recovery_days }} recovery day(s). Your weekly workload is {{ plan_summary.total_minutes }} minutes.
+                        </p>
+                    {% else %}
+                        <p>Create your first plan to unlock FitBuddy coaching insights.</p>
+                    {% endif %}
+                </div>
+            </section>
+
             <section class="dashboard-grid">
                 <div class="main-column">
                     <div class="card plan-header">
                         <h2>7-Day Personalized Plan</h2>
+                        {% if plan and plan.version %}
+                            <p class="muted">Viewing Version {{ plan.version }}</p>
+                        {% endif %}
                     </div>
                     {% if plan and plan.plan_data %}
+                        {% if plan_summary.focus_areas %}
+                            <div class="card focus-summary">
+                                <h3>Focus breakdown</h3>
+                                <div class="tag-list">
+                                    {% for focus in plan_summary.focus_areas %}
+                                        <span class="focus-tag">{{ focus }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
                         {% for day in plan.plan_data.days %}
                             <article class="workout-card card">
                                 <div class="day-header">
@@ -68,6 +112,30 @@
                         <h3>Today's Nutrition & Recovery Tip</h3>
                         <button id="tipBtn" class="btn secondary">Generate Tip</button>
                         <div id="tipResult" class="tip-result"></div>
+                    </div>
+
+                    <div class="card habits-card">
+                        <div class="habit-header">
+                            <h3>Daily habits</h3>
+                            <span id="habitProgressText" class="muted">0/3 done</span>
+                        </div>
+                        <div class="habit-list">
+                            <label class="habit-item">
+                                <input type="checkbox" data-habit="hydration" />
+                                <span>Hydration goal</span>
+                            </label>
+                            <label class="habit-item">
+                                <input type="checkbox" data-habit="recovery" />
+                                <span>Recovery walk</span>
+                            </label>
+                            <label class="habit-item">
+                                <input type="checkbox" data-habit="protein" />
+                                <span>Protein target</span>
+                            </label>
+                        </div>
+                        <div class="habit-progress">
+                            <div id="habitProgressBar" class="habit-progress-bar"></div>
+                        </div>
                     </div>
 
                     <div class="card">

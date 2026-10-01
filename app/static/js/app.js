@@ -54,6 +54,35 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', submitProfileForm);
     }
 
+    const copyPlanBtn = document.getElementById('copyPlanBtn');
+    if (copyPlanBtn) {
+        copyPlanBtn.addEventListener('click', async () => {
+            const summaryText = document.getElementById('planSummaryText');
+            if (!summaryText) return;
+
+            const text = summaryText.textContent.trim();
+            try {
+                await navigator.clipboard.writeText(text);
+                const originalText = copyPlanBtn.textContent;
+                copyPlanBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyPlanBtn.textContent = originalText;
+                }, 1200);
+            } catch (error) {
+                const fallback = document.createElement('textarea');
+                fallback.value = text;
+                document.body.appendChild(fallback);
+                fallback.select();
+                document.execCommand('copy');
+                document.body.removeChild(fallback);
+                copyPlanBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyPlanBtn.textContent = 'Copy summary';
+                }, 1200);
+            }
+        });
+    }
+
     const refineBtn = document.getElementById('refinePlanBtn');
     if (refineBtn) {
         refineBtn.addEventListener('click', async () => {
@@ -111,5 +140,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 tipBtn.textContent = 'Generate Tip';
             }
         });
+    }
+
+    const habitStorageKey = `fitbuddy-habits-${window.userId || 'guest'}`;
+    const habitInputs = document.querySelectorAll('[data-habit]');
+    const habitProgressText = document.getElementById('habitProgressText');
+    const habitProgressBar = document.getElementById('habitProgressBar');
+
+    function syncHabitProgress() {
+        const saved = JSON.parse(localStorage.getItem(habitStorageKey) || '{}');
+        let checkedCount = 0;
+
+        habitInputs.forEach((input) => {
+            const habitKey = input.dataset.habit;
+            const isChecked = Boolean(saved[habitKey]);
+            input.checked = isChecked;
+            if (isChecked) checkedCount += 1;
+        });
+
+        const total = habitInputs.length || 1;
+        const percentage = (checkedCount / total) * 100;
+        if (habitProgressText) habitProgressText.textContent = `${checkedCount}/${total} done`;
+        if (habitProgressBar) habitProgressBar.style.width = `${percentage}%`;
+    }
+
+    habitInputs.forEach((input) => {
+        input.addEventListener('change', () => {
+            const saved = JSON.parse(localStorage.getItem(habitStorageKey) || '{}');
+            saved[input.dataset.habit] = input.checked;
+            localStorage.setItem(habitStorageKey, JSON.stringify(saved));
+            syncHabitProgress();
+        });
+    });
+
+    if (habitInputs.length) {
+        syncHabitProgress();
     }
 });

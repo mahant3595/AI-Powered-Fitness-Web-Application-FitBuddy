@@ -53,6 +53,18 @@ def get_plan_history(user_id: int, db: Session = Depends(get_db)) -> list[Workou
     return plans
 
 
+@router.get(
+    "/workouts/plan/{plan_id}",
+    response_model=WorkoutPlanResponse,
+    summary="Get one saved workout plan version",
+    description="Return a specific workout plan version by ID so users can review earlier plan iterations.")
+def get_plan_by_id(plan_id: int, db: Session = Depends(get_db)) -> WorkoutPlan:
+    plan = db.query(WorkoutPlan).filter(WorkoutPlan.id == plan_id).first()
+    if not plan:
+        raise HTTPException(status_code=404, detail="Workout plan not found.")
+    return plan
+
+
 @router.post(
     "/workouts/refine",
     response_model=WorkoutPlanResponse,

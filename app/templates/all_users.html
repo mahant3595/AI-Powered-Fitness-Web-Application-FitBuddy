@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitBuddy Admin</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <div class="brand">FitBuddy</div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/profile">Profile</a>
+                <a href="/admin/users">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container form-wrap">
+            <section class="card hero-row">
+                <p class="eyebrow">Admin panel</p>
+                <h1>Registered users</h1>
+            </section>
+
+            {% if users %}
+                <div class="card">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Goal</th>
+                                <th>Intensity</th>
+                                <th>Plans</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.fitness_goal }}</td>
+                                    <td>{{ user.workout_intensity }}</td>
+                                    <td>{{ user.plan_count }}</td>
+                                    <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                                    <td><a class="btn secondary small" href="/dashboard/{{ user.id }}">View</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="card empty-state">No users yet.</div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

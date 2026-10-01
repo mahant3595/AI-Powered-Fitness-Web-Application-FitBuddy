@@ -29,7 +29,7 @@
                             {% if item.feedback %}
                                 <p>Updated based on feedback: {{ item.feedback }}</p>
                             {% endif %}
-                            <button class="btn secondary" onclick="window.location.href='/dashboard/{{ user.id }}'">Open latest plan</button>
+                            <button class="btn secondary" onclick="window.location.href='/dashboard/{{ user.id }}?plan_id={{ item.id }}'">Open version {{ item.version }}</button>
                         </div>
                     {% endfor %}
                 {% else %}
